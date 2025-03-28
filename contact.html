@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문의하기 - 주소모음</title>
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #1f1f1f;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    /* 상단 네비게이션 */
+    .top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-left: 0; /* 기본값 (모바일 기준) */
+}
+
+/* ✅ 데스크탑(PC) 환경일 때 조정 */
+@media screen and (min-width: 768px) {
+  .top-nav {
+    margin-left: 5px; /* PC에서만 왼쪽으로 살짝 이동 */
+  }
+}
+
+    .top-nav a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .top-nav a:hover {
+      color: #00ffe0;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    /* 입력 폼 */
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    input, textarea { /*문의 입력칸*/
+      background-color: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+
+    /* ✅ placeholder 글씨 크기 조절 */
+input::placeholder,
+textarea::placeholder {
+  font-size: 0.85rem;
+  color: #dddddd; /* 선택사항: 색상도 조절 가능 */
+}
+
+    button {
+  padding: 5px 8px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+/* 작성 버튼 */
+button[type="submit"] {
+  background-color: #ffffff;
+  color: #000;
+}
+
+/* 작성 버튼 hover */
+button[type="submit"]:hover {
+  background-color: #989898; /* 원하는 색상으로 변경 가능 */
+  color: #000000;
+}
+
+    .post-list {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .post {
+      background-color: #333;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .post h3 {
+      margin: 0 0 10px;
+    }
+
+    .post p {
+      margin-bottom: 12px;
+    }
+
+    .delete-btn { /*글삭제버튼*/
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background-color: #ffffff;
+      color: rgb(0, 0, 0);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #989898;
+    }
+
+    /* 댓글 영역 */
+    .comment-section {
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #666;
+    }
+
+    .comment {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0;
+      margin-bottom: ;
+}
+    }
+
+    .comment b {
+      color: #000000;
+    }
+
+    .comment button {   /*댓글삭제버튼*/
+      background-color: #ffffff;
+      color: rgb(0, 0, 0);
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .comment button:hover { /*댓글삭제버튼 커서이동시 바뀌는색*/
+      background-color: #989898;
+    }
+
+    .comment-inputs {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .comment-inputs input {  /*댓글 작성자명, 댓글내용 칸*/
+      padding: 10px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #000000;
+      color: #ffffff;
+      flex: 1;
+    }
+
+    .comment-inputs input:first-child {
+      flex: 0.3; /* 댓글 작성자명 비율 */
+    }
+
+    .comment-inputs button { /*댓글작성버튼*/
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      background-color: #ffffff;
+      margin-top: -3px;
+    }
+
+    .comment-inputs button:hover { /*댓글작성버튼 커서이동시 바뀌는색*/
+      background-color: #989898;
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <a href="index.html">홈</a>
+    <a href="#">이용방법</a>
+    <a href="contact.html">문의</a>
+  </nav>
+
+  <h1>문의하기</h1>
+
+  <!-- 작성 폼 -->
+  <form id="inquiry-form">
+    <input type="text" id="name" placeholder="이름" required />
+    <textarea id="content" placeholder="문의 내용을 입력해주세요" rows="4" required></textarea>
+    <input type="password" id="password" placeholder="4자리 숫자 비밀번호" pattern="\d{4}" required />
+    <button type="submit">작성하기</button>
+  </form>
+
+  <!-- 게시글 리스트 -->
+  <div class="post-list" id="post-list"></div>
+
+  <!-- 스크립트 -->
+  <script>
+    const form = document.getElementById('inquiry-form');
+    const postList = document.getElementById('post-list');
+
+    let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+    function renderPosts() {
+      postList.innerHTML = '';
+      posts.forEach((post, index) => {
+        const div = document.createElement('div');
+        div.className = 'post';
+
+        // 댓글 렌더링
+        let commentsHtml = '';
+        (post.comments || []).forEach((c, i) => {
+          commentsHtml += `
+            <div class="comment">
+              💬 ${c.name}: ${c.text}
+              <button onclick="deleteComment(${index}, ${i})">삭제</button>
+            </div>`;
+        });
+
+        div.innerHTML = `
+          <h3>${post.name}</h3>
+          <p>${post.content}</p>
+          <div class="comment-section">
+            ${commentsHtml}
+            <div class="comment-inputs">
+              <input type="text" placeholder="작성자명" id="comment-name-${index}" />
+              <input type="text" placeholder="댓글 내용" id="comment-text-${index}" />
+              <button onclick="addComment(${index})">댓글</button>
+            </div>
+          </div>
+          <button class="delete-btn" onclick="deletePost(${index})">삭제</button>
+        `;
+        postList.appendChild(div);
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const content = document.getElementById('content').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!name || !content || !/^\d{4}$/.test(password)) {
+        alert('모든 항목을 입력해주세요. (비밀번호는 숫자 4자리)');
+        return;
+      }
+
+      posts.unshift({ name, content, password, comments: [] });
+      localStorage.setItem('posts', JSON.stringify(posts));
+      form.reset();
+      renderPosts();
+    });
+
+    window.deletePost = function(index) {
+      const pw = prompt('비밀번호를 입력하세요 (4자리)');
+      if (pw === posts[index].password) {
+        posts.splice(index, 1);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        renderPosts();
+      } else {
+        alert('비밀번호가 일치하지 않습니다.');
+      }
+    };
+
+    window.addComment = function(index) {
+      const name = document.getElementById(`comment-name-${index}`).value.trim();
+      const text = document.getElementById(`comment-text-${index}`).value.trim();
+
+      if (!name || !text) {
+        alert('작성자명과 댓글 내용을 입력해주세요.');
+        return;
+      }
+
+      posts[index].comments = posts[index].comments || [];
+      posts[index].comments.push({ name, text });
+      localStorage.setItem('posts', JSON.stringify(posts));
+      renderPosts();
+    };
+
+    window.deleteComment = function(postIndex, commentIndex) {
+      posts[postIndex].comments.splice(commentIndex, 1);
+      localStorage.setItem('posts', JSON.stringify(posts));
+      renderPosts();
+    };
+
+    renderPosts();
+  </script>
+
+</body>
+</html>

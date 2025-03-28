@@ -20,6 +20,35 @@
 
   <style>
 
+    /* 상단 네비게이션 */
+    .top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-left: 0; /* 기본값 (모바일 기준) */
+}
+
+/* ✅ 데스크탑(PC) 환경일 때 조정 */
+@media screen and (min-width: 768px) {
+  .top-nav {
+    margin-left: 20px; /* PC에서만 왼쪽으로 살짝 이동 */
+  }
+}
+
+.top-nav a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.top-nav a:hover {
+  color: #00ffe0;
+}
+
+
     /* ✅ 중복 제거하고, 하나만 남긴 @keyframes */
     @keyframes subtleGlow {
   0%, 100% {
@@ -126,6 +155,14 @@
     
 </head>
 <body>
+  <nav class="top-nav">
+    <a href="index.html">홈</a>
+    <a href="how.html">이용방법</a>
+    <a href="contact.html">문의</a>
+  </nav>
+  
+  
+
     <!-- ✅ 새 구조로 감싸기 -->
 <div class="title-wrapper">
   <h1 class="typing-title">주소모음</h1>
