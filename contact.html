@@ -16,23 +16,21 @@
       padding: 40px 20px;
     }
 
-    /* 상단 네비게이션 */
     .top-nav {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 40px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-left: 0; /* 기본값 (모바일 기준) */
-}
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-left: 0;
+    }
 
-/* ✅ 데스크탑(PC) 환경일 때 조정 */
-@media screen and (min-width: 768px) {
-  .top-nav {
-    margin-left: 5px; /* PC에서만 왼쪽으로 살짝 이동 */
-  }
-}
+    @media screen and (min-width: 768px) {
+      .top-nav {
+        margin-left: 5px;
+      }
+    }
 
     .top-nav a {
       color: #fff;
@@ -47,7 +45,6 @@
       margin-bottom: 30px;
     }
 
-    /* 입력 폼 */
     form {
       display: flex;
       flex-direction: column;
@@ -56,7 +53,7 @@
       margin-bottom: 40px;
     }
 
-    input, textarea { /*문의 입력칸*/
+    input, textarea {
       background-color: #000000;
       color: #ffffff;
       border: none;
@@ -68,38 +65,35 @@
       box-sizing: border-box;
     }
 
-    /* ✅ placeholder 글씨 크기 조절 */
-input::placeholder,
-textarea::placeholder {
-  font-size: 0.85rem;
-  color: #dddddd; /* 선택사항: 색상도 조절 가능 */
-}
+    input::placeholder,
+    textarea::placeholder {
+      font-size: 0.85rem;
+      color: #dddddd;
+    }
 
     button {
-  padding: 5px 8px;
-  font-weight: bold;
-  font-size: 0.85rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.1s;
-}
+      padding: 5px 8px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.1s;
+    }
 
-button:hover {
-  transform: scale(1.03);
-}
+    button:hover {
+      transform: scale(1.03);
+    }
 
-/* 작성 버튼 */
-button[type="submit"] {
-  background-color: #ffffff;
-  color: #000;
-}
+    button[type="submit"] {
+      background-color: #ffffff;
+      color: #000;
+    }
 
-/* 작성 버튼 hover */
-button[type="submit"]:hover {
-  background-color: #989898; /* 원하는 색상으로 변경 가능 */
-  color: #000000;
-}
+    button[type="submit"]:hover {
+      background-color: #989898;
+      color: #000000;
+    }
 
     .post-list {
       max-width: 500px;
@@ -123,7 +117,7 @@ button[type="submit"]:hover {
       margin-bottom: 12px;
     }
 
-    .delete-btn { /*글삭제버튼*/
+    .delete-btn {
       position: absolute;
       top: 10px;
       right: 15px;
@@ -140,7 +134,6 @@ button[type="submit"]:hover {
       background-color: #989898;
     }
 
-    /* 댓글 영역 */
     .comment-section {
       margin-top: 15px;
       padding-top: 10px;
@@ -155,15 +148,13 @@ button[type="submit"]:hover {
       justify-content: space-between;
       align-items: center;
       margin-top: 0;
-      margin-bottom: ;
-}
     }
 
     .comment b {
       color: #000000;
     }
 
-    .comment button {   /*댓글삭제버튼*/
+    .comment button {
       background-color: #ffffff;
       color: rgb(0, 0, 0);
       border: none;
@@ -174,7 +165,7 @@ button[type="submit"]:hover {
       margin-left: 10px;
     }
 
-    .comment button:hover { /*댓글삭제버튼 커서이동시 바뀌는색*/
+    .comment button:hover {
       background-color: #989898;
     }
 
@@ -185,7 +176,7 @@ button[type="submit"]:hover {
       align-items: center;
     }
 
-    .comment-inputs input {  /*댓글 작성자명, 댓글내용 칸*/
+    .comment-inputs input {
       padding: 10px;
       font-size: 0.9rem;
       border-radius: 8px;
@@ -196,17 +187,17 @@ button[type="submit"]:hover {
     }
 
     .comment-inputs input:first-child {
-      flex: 0.3; /* 댓글 작성자명 비율 */
+      flex: 0.3;
     }
 
-    .comment-inputs button { /*댓글작성버튼*/
+    .comment-inputs button {
       padding: 5px 10px;
       font-size: 0.85rem;
       background-color: #ffffff;
       margin-top: -3px;
     }
 
-    .comment-inputs button:hover { /*댓글작성버튼 커서이동시 바뀌는색*/
+    .comment-inputs button:hover {
       background-color: #989898;
     }
 
@@ -220,9 +211,8 @@ button[type="submit"]:hover {
     <a href="./contact.html">문의</a>
   </nav>
 
-  <h1>문의하기</h1>
+  <h1>문의하기1</h1>
 
-  <!-- 작성 폼 -->
   <form id="inquiry-form">
     <input type="text" id="name" placeholder="이름" required />
     <textarea id="content" placeholder="문의 내용을 입력해주세요" rows="4" required></textarea>
@@ -230,14 +220,11 @@ button[type="submit"]:hover {
     <button type="submit">작성하기</button>
   </form>
 
-  <!-- 게시글 리스트 -->
   <div class="post-list" id="post-list"></div>
 
-  <!-- 스크립트 -->
   <script>
     const form = document.getElementById('inquiry-form');
     const postList = document.getElementById('post-list');
-
     let posts = JSON.parse(localStorage.getItem('posts')) || [];
 
     function renderPosts() {
@@ -246,7 +233,6 @@ button[type="submit"]:hover {
         const div = document.createElement('div');
         div.className = 'post';
 
-        // 댓글 렌더링
         let commentsHtml = '';
         (post.comments || []).forEach((c, i) => {
           commentsHtml += `
@@ -324,41 +310,6 @@ button[type="submit"]:hover {
 
     renderPosts();
   </script>
-<!-- Firebase 설정 스크립트 (꼭 body 닫히기 전) -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBT5rmlMHzsC5iyX1-MSv0t473m5rzAkIs",
-    authDomain: "juso-contact.firebaseapp.com",
-    projectId: "juso-contact",
-    storageBucket: "juso-contact.firebasestorage.app",
-    messagingSenderId: "834671436037",
-    appId: "1:834671436037:web:849e362358eb76d8acd76c",
-    measurementId: "G-QYBE3KJ8NP"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // 아래에 Firestore 연동 함수가 추가될 예정!
-
-  // 🔸 게시글 저장 함수
-async function savePostToFirestore(postData) {
-  try {
-    await addDoc(collection(db, "posts"), {
-      ...postData,
-      createdAt: new Date()
-    });
-    console.log("게시글 저장 완료");
-  } catch (e) {
-    console.error("게시글 저장 오류:", e);
-  }
-}
-
-</script>
-
 
 </body>
 </html>
