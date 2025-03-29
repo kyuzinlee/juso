@@ -320,7 +320,7 @@ if (!name || !content || !/^\d{4}$/.test(password)) {
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
-
+  
     const firebaseConfig = {
       apiKey: "AIzaSyBT5rmlMHzsC5iyX1-MSv0t473m5rzAkIs",
       authDomain: "juso-contact.firebaseapp.com",
@@ -330,68 +330,47 @@ if (!name || !content || !/^\d{4}$/.test(password)) {
       appId: "1:834671436037:web:849e362358eb76d8acd76c",
       measurementId: "G-QYBE3KJ8NP"
     };
-
+  
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
+  
     async function savePostToFirestore(postData) {
       try {
         await addDoc(collection(db, "posts"), {
           ...postData,
           createdAt: new Date()
         });
-        console.log("게시글 저장 완료");
+        console.log("✅ 게시글 저장 완료");
       } catch (e) {
-        console.error("게시글 저장 오류:", e);
+        console.error("❌ 게시글 저장 오류:", e);
       }
     }
-
-    async function addCommentToFirestore(postIndex, comment) {
-      try {
-        const snapshot = await getDocs(query(collection(db, "posts"), orderBy("createdAt", "desc")));
-        const docs = snapshot.docs;
-        const postDoc = docs[postIndex];
-        if (!postDoc) return;
-        const postData = postDoc.data();
-        const comments = postData.comments || [];
-        comments.push(comment);
-        await deleteDoc(postDoc.ref);
-        await addDoc(collection(db, "posts"), {
-          ...postData,
-          comments,
-          createdAt: postData.createdAt || new Date()
-        });
-        console.log("댓글 저장 완료");
-      } catch (e) {
-        console.error("댓글 저장 오류:", e);
-      }
-    }
-
-
-  const postData = { name, content, password, comments: [] };
-  posts.unshift(postData);
-  localStorage.setItem('posts', JSON.stringify(posts));
-  form.reset();
-  renderPosts();
-
-  // 🔹 Firebase 저장도 추가
-  await savePostToFirestore(postData);
-});
-
-
-    window.addComment = async function(index) {
-      const name = document.getElementById(`comment-name-${index}`).value.trim();
-      const text = document.getElementById(`comment-text-${index}`).value.trim();
-      if (!name || !text) {
-        alert('작성자명과 댓글 내용을 입력해주세요.');
+  
+    // ✅ 기존 submit 이벤트리스너는 삭제하고, 아래 하나만 유지
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const content = document.getElementById('content').value.trim();
+      const password = document.getElementById('password').value.trim();
+  
+      if (!name || !content || !/^\d{4}$/.test(password)) {
+        alert('모든 항목을 입력해주세요. (비밀번호는 숫자 4자리)');
         return;
       }
-      posts[index].comments = posts[index].comments || [];
-      posts[index].comments.push({ name, text });
+  
+      const postData = { name, content, password, comments: [] };
+  
+      // ✅ 로컬 저장
+      posts.unshift(postData);
       localStorage.setItem('posts', JSON.stringify(posts));
       renderPosts();
-      await addCommentToFirestore(index, { name, text });
-    };
+  
+      // ✅ Firestore 저장
+      await savePostToFirestore(postData);
+  
+      form.reset();
+    });
   </script>
+  
 </body>
 </html>
