@@ -357,23 +357,6 @@ async function savePostToFirestore(postData) {
   }
 }
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('name').value.trim();
-  const content = document.getElementById('content').value.trim();
-  const password = document.getElementById('password').value.trim();
-
-  if (!name || !content || !/^\d{4}$/.test(password)) {
-    alert('모든 항목을 입력해주세요. (비밀번호는 숫자 4자리)');
-    return;
-  }
-
-  const postData = { name, content, password, comments: [] };
-  await savePostToFirestore(postData);  // 🔹 Firestore에 저장
-  form.reset();
-});
-
-
 </script>
 
 
