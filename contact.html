@@ -213,6 +213,7 @@ button[type="submit"]:hover {
   </style>
 </head>
 <body>
+
   <nav class="top-nav">
     <a href="./index.html">홈</a>
     <a href="./how.html">이용방법</a>
@@ -221,19 +222,22 @@ button[type="submit"]:hover {
 
   <h1>문의하기</h1>
 
+  <!-- 작성 폼 -->
   <form id="inquiry-form">
     <input type="text" id="name" placeholder="이름" required />
     <textarea id="content" placeholder="문의 내용을 입력해주세요" rows="4" required></textarea>
-    <input type="password" id="password" placeholder="4자리 숫자 비밀번호" required />
+    <input type="password" id="password" placeholder="4자리 숫자 비밀번호" pattern="\d{4}" required />
     <button type="submit">작성하기</button>
   </form>
 
+  <!-- 게시글 리스트 -->
   <div class="post-list" id="post-list"></div>
 
-  <!-- 기존 로컬 저장 및 렌더링 로직 -->
+  <!-- 스크립트 -->
   <script>
     const form = document.getElementById('inquiry-form');
     const postList = document.getElementById('post-list');
+
     let posts = JSON.parse(localStorage.getItem('posts')) || [];
 
     function renderPosts() {
@@ -241,6 +245,8 @@ button[type="submit"]:hover {
       posts.forEach((post, index) => {
         const div = document.createElement('div');
         div.className = 'post';
+
+        // 댓글 렌더링
         let commentsHtml = '';
         (post.comments || []).forEach((c, i) => {
           commentsHtml += `
@@ -261,45 +267,115 @@ button[type="submit"]:hover {
               <button onclick="addComment(${index})">댓글</button>
             </div>
           </div>
-          <button class="delete-btn" onclick="deletePost(${index})">삭제</button>`;
+          <button class="delete-btn" onclick="deletePost(${index})">삭제</button>
+        `;
         postList.appendChild(div);
       });
     }
 
-    form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('name').value.trim();
-  const content = document.getElementById('content').value.trim();
-  const password = document.getElementById('password').value.trim();
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const content = document.getElementById('content').value.trim();
+      const password = document.getElementById('password').value.trim();
 
-  if (!name || !content || !password || !/^\d{4}$/.test(password)) {
-  alert('모든 항목을 입력해주세요. (비밀번호는 숫자 4자리)');
-  return;
-}
+      if (!name || !content || !/^\d{4}$/.test(password)) {
+        alert('모든 항목을 입력해주세요. (비밀번호는 숫자 4자리)');
+        return;
+      }
 
-  const postData = { name, content, password, comments: [] };
+      posts.unshift({ name, content, password, comments: [] });
+      localStorage.setItem('posts', JSON.stringify(posts));
+      form.reset();
+      renderPosts();
+    });
 
-  // 🔸 로컬 저장
-  posts.unshift(postData);
-  localStorage.setItem('posts', JSON.stringify(posts));
-  renderPosts();
+    window.deletePost = function(index) {
+      const pw = prompt('비밀번호를 입력하세요 (4자리)');
+      if (pw === posts[index].password) {
+        posts.splice(index, 1);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        renderPosts();
+      } else {
+        alert('비밀번호가 일치하지 않습니다.');
+      }
+    };
 
-  // 🔸 Firebase 저장
+    window.addComment = function(index) {
+      const name = document.getElementById(`comment-name-${index}`).value.trim();
+      const text = document.getElementById(`comment-text-${index}`).value.trim();
+
+      if (!name || !text) {
+        alert('작성자명과 댓글 내용을 입력해주세요.');
+        return;
+      }
+
+      posts[index].comments = posts[index].comments || [];
+      posts[index].comments.push({ name, text });
+      localStorage.setItem('posts', JSON.stringify(posts));
+      renderPosts();
+    };
+
+    window.deleteComment = function(postIndex, commentIndex) {
+      posts[postIndex].comments.splice(commentIndex, 1);
+      localStorage.setItem('posts', JSON.stringify(posts));
+      renderPosts();
+    };
+
+    renderPosts();
+  </script>
+<!-- Firebase 설정 스크립트 (꼭 body 닫히기 전) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBT5rmlMHzsC5iyX1-MSv0t473m5rzAkIs",
+    authDomain: "juso-contact.firebaseapp.com",
+    projectId: "juso-contact",
+    storageBucket: "juso-contact.firebasestorage.app",
+    messagingSenderId: "834671436037",
+    appId: "1:834671436037:web:849e362358eb76d8acd76c",
+    measurementId: "G-QYBE3KJ8NP"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 아래에 Firestore 연동 함수가 추가될 예정!
+
+  // 🔸 게시글 저장 함수
+async function savePostToFirestore(postData) {
   try {
     await addDoc(collection(db, "posts"), {
       ...postData,
       createdAt: new Date()
     });
-    console.log("✅ Firestore 저장 완료");
+    console.log("게시글 저장 완료");
   } catch (e) {
-    console.error("❌ Firestore 저장 실패:", e);
+    console.error("게시글 저장 오류:", e);
+  }
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const content = document.getElementById('content').value.trim();
+  const password = document.getElementById('password').value.trim();
+
+  if (!name || !content || !/^\d{4}$/.test(password)) {
+    alert('모든 항목을 입력해주세요. (비밀번호는 숫자 4자리)');
+    return;
   }
 
+  const postData = { name, content, password, comments: [] };
+  await savePostToFirestore(postData);  // 🔹 Firestore에 저장
   form.reset();
 });
 
+
 </script>
 
-  
+
 </body>
 </html>
