@@ -23,12 +23,12 @@
       margin-bottom: 40px;
       font-size: 1.3rem;
       font-weight: bold;
-      margin-left: 0;
+      margin-left: 0px;
     }
 
     @media screen and (min-width: 768px) {
       .top-nav {
-        margin-left: 5px;
+        margin-left: 20px;
       }
     }
 
@@ -135,71 +135,106 @@
     }
 
     .comment-section {
-      margin-top: 15px;
-      padding-top: 10px;
-      border-top: 1px solid #666;
-    }
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #666;
+}
 
-    .comment {
-      font-size: 0.9rem;
-      color: #ccc;
-      margin: 6px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0;
-    }
+.comment {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin: 6px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+}
 
-    .comment b {
-      color: #000000;
-    }
+.comment b {
+  color: #000000;
+}
 
-    .comment button {
-      background-color: #ffffff;
-      color: rgb(0, 0, 0);
-      border: none;
-      border-radius: 5px;
-      padding: 5px 10px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      margin-left: 10px;
-    }
+.comment button {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-left: 10px;
+}
 
-    .comment button:hover {
-      background-color: #989898;
-    }
+.comment button:hover {
+  background-color: #989898;
+}
 
-    .comment-inputs {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      align-items: center;
-    }
+/* 댓글 입력 영역 */
+.comment-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  align-items: flex-start;
+}
 
-    .comment-inputs input {
-      padding: 10px;
-      font-size: 0.9rem;
-      border-radius: 8px;
-      border: none;
-      background-color: #000000;
-      color: #ffffff;
-      flex: 1;
-    }
+/* 첫 줄: 작성자명 + 비밀번호 */
+.comment-row-top {
+  display: flex;
+  gap: 10px;
+  width: 60%;
+}
 
-    .comment-inputs input:first-child {
-      flex: 0.3;
-    }
+.comment-row-top input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 0.9rem;
+  height: 36px;
+}
 
-    .comment-inputs button {
-      padding: 5px 10px;
-      font-size: 0.85rem;
-      background-color: #ffffff;
-      margin-top: -3px;
-    }
+.comment-row-top input:first-child {
+  width: 27%; /* 작성자 */
+}
 
-    .comment-inputs button:hover {
-      background-color: #989898;
-    }
+.comment-row-top input:last-child {
+  width: 42%; /* 비밀번호 */
+}
+
+/* 둘째 줄: 댓글 내용 + 버튼 */
+.comment-row-bottom {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.comment-row-bottom input {  /*댓글작성버튼*/
+  width: 600px;  /* 원하는 너비로 설정 */
+  max-width: 88%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.comment-row-bottom button {
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  background-color: #ffffff;
+  color: #000;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+}
+
+.comment-row-bottom button:hover {
+  background-color: #989898;
+}
+
 
   </style>
 </head>
@@ -226,13 +261,13 @@
     const form = document.getElementById('inquiry-form');
     const postList = document.getElementById('post-list');
     let posts = JSON.parse(localStorage.getItem('posts')) || [];
-
+  
     function renderPosts() {
       postList.innerHTML = '';
       posts.forEach((post, index) => {
         const div = document.createElement('div');
         div.className = 'post';
-
+  
         let commentsHtml = '';
         (post.comments || []).forEach((c, i) => {
           commentsHtml += `
@@ -241,41 +276,46 @@
               <button onclick="deleteComment(${index}, ${i})">삭제</button>
             </div>`;
         });
-
+  
         div.innerHTML = `
           <h3>${post.name}</h3>
           <p>${post.content}</p>
           <div class="comment-section">
             ${commentsHtml}
             <div class="comment-inputs">
-              <input type="text" placeholder="작성자명" id="comment-name-${index}" />
-              <input type="text" placeholder="댓글 내용" id="comment-text-${index}" />
-              <button onclick="addComment(${index})">댓글</button>
-            </div>
-          </div>
+  <div class="comment-row-top">
+    <input type="text" id="comment-name-${index}" placeholder="작성자명" />
+    <input type="password" id="comment-password-${index}" placeholder="비밀번호(4자리)" />
+  </div>
+  <div class="comment-row-bottom">
+    <input type="text" id="comment-text-${index}" placeholder="댓글 내용" />
+    <button onclick="addComment(${index})">댓글</button>
+  </div>
+</div>
+
           <button class="delete-btn" onclick="deletePost(${index})">삭제</button>
         `;
         postList.appendChild(div);
       });
     }
-
+  
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('name').value.trim();
       const content = document.getElementById('content').value.trim();
       const password = document.getElementById('password').value.trim();
-
+  
       if (!name || !content || !/^\d{4}$/.test(password)) {
         alert('모든 항목을 입력해주세요. (비밀번호는 숫자 4자리)');
         return;
       }
-
+  
       posts.unshift({ name, content, password, comments: [] });
       localStorage.setItem('posts', JSON.stringify(posts));
       form.reset();
       renderPosts();
     });
-
+  
     window.deletePost = function(index) {
       const pw = prompt('비밀번호를 입력하세요 (4자리)');
       if (pw === posts[index].password) {
@@ -286,30 +326,39 @@
         alert('비밀번호가 일치하지 않습니다.');
       }
     };
-
+  
     window.addComment = function(index) {
-      const name = document.getElementById(`comment-name-${index}`).value.trim();
-      const text = document.getElementById(`comment-text-${index}`).value.trim();
+  const name = document.getElementById(`comment-name-${index}`).value.trim();
+  const password = document.getElementById(`comment-password-${index}`).value.trim();
+  const text = document.getElementById(`comment-text-${index}`).value.trim();
 
-      if (!name || !text) {
-        alert('작성자명과 댓글 내용을 입력해주세요.');
-        return;
-      }
+  if (!name || !text || !/^\d{4}$/.test(password)) {
+    alert('작성자명, 댓글 내용, 비밀번호(4자리)를 입력해주세요.');
+    return;
+  }
 
-      posts[index].comments = posts[index].comments || [];
-      posts[index].comments.push({ name, text });
-      localStorage.setItem('posts', JSON.stringify(posts));
-      renderPosts();
-    };
+  posts[index].comments = posts[index].comments || [];
+  posts[index].comments.push({ name, text, password });
+  localStorage.setItem('posts', JSON.stringify(posts));
+  renderPosts();
+};
 
+  
     window.deleteComment = function(postIndex, commentIndex) {
-      posts[postIndex].comments.splice(commentIndex, 1);
-      localStorage.setItem('posts', JSON.stringify(posts));
-      renderPosts();
+      const pw = prompt('댓글 비밀번호를 입력하세요 (4자리)');
+      const comment = posts[postIndex].comments[commentIndex];
+      if (pw === comment.password) {
+        posts[postIndex].comments.splice(commentIndex, 1);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        renderPosts();
+      } else {
+        alert('비밀번호가 일치하지 않습니다.');
+      }
     };
-
+  
     renderPosts();
   </script>
+  
 
 </body>
 </html>
